@@ -1,5 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 
+// holds the connection string
+
 namespace Roommates.Repositories
 {
     /// <summary>

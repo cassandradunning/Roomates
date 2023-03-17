@@ -11,6 +11,7 @@ namespace Roommates.Models
         public string LastName { get; set; }
         public int RentPortion { get; set; }
         public DateTime MovedInDate { get; set; }
+        // has the property of Room, thats why we can access it 
         public Room Room { get; set; }
     }
 }

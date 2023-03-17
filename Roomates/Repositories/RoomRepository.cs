@@ -94,6 +94,8 @@ namespace Roommates.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
+                    // EXECUTE SCALAR - inserting the row and then giving us the id after we've added it
+                    // @ in SQL is a variable and you have to assign a variable
                     cmd.CommandText = @"INSERT INTO Room (Name, MaxOccupancy) 
                                          OUTPUT INSERTED.Id 
                                          VALUES (@name, @maxOccupancy)";
@@ -135,6 +137,49 @@ namespace Roommates.Repositories
                         return room;
                     }
 
+                }
+            }
+        }
+
+        /// <summary>
+        ///  Updates the room
+        /// </summary>
+        public void Update(Room room)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE Room
+                                    SET Name = @name,
+                                        MaxOccupancy = @maxOccupancy
+                                    WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@name", room.Name);
+                    cmd.Parameters.AddWithValue("@maxOccupancy", room.MaxOccupancy);
+                    cmd.Parameters.AddWithValue("@id", room.Id);
+
+                    // Now that we're using a UPDATE statement in our SQL command, what we're really
+                    // telling the database is simply that "We'd like you to execute this SQL code to update a row. .
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        ///  Delete the room with the given id
+        /// </summary>
+        public void Delete(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    // What do you think this code will do if there is a roommate in the room we're deleting???
+                    cmd.CommandText = "DELETE FROM Room WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
